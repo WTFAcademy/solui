@@ -7,6 +7,7 @@ interface OperateSpaceProps {
   abi: any;
   contractAddress: string;
   providerUrl: string;
+  onLog: (message: string) => void;
 }
 
 const OperateSpace: React.FC<OperateSpaceProps> = ({
@@ -14,6 +15,7 @@ const OperateSpace: React.FC<OperateSpaceProps> = ({
   abi,
   contractAddress,
   providerUrl,
+  onLog,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const { callFunction } = useEthers({ abi, contractAddress, providerUrl });
@@ -29,8 +31,15 @@ const OperateSpace: React.FC<OperateSpaceProps> = ({
           ? []
           : inputValue.split(",").map((value) => value.trim());
 
-      await callFunction(functionName, inputValues);
-      setIsLoading(false);
+      try {
+        const result = await callFunction(functionName, inputValues);
+        onLog(`Result: ${JSON.stringify(result)}`);
+      } catch (error) {
+        const typedError = error as Error;
+        onLog(`Error: ${typedError.message}`);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 

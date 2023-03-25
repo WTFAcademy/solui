@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { AbiItem } from "web3-utils";
 import ABIFormatter from "./components/ABIFormatter";
 import Header from "./components/Header";
+import LogSpace from "./components/LogSpace";
 import OperateSpace from "./components/OperateSpace";
 
 // mock data
@@ -165,6 +166,11 @@ const providerUrl = `https://mainnet.infura.io/v3/${INFURA_ID}`;
 
 const App: React.FC = () => {
   const [selectedAbi, setSelectedAbi] = useState<AbiItem | null>(null);
+  const [logs, setLogs] = useState<string[]>([]);
+
+  const handleLogMessage = (message: string) => {
+    setLogs((prevLogs) => [...prevLogs, message]);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -183,10 +189,11 @@ const App: React.FC = () => {
               abi={abi}
               contractAddress={contractAddress}
               providerUrl={providerUrl}
+              onLog={handleLogMessage}
             />
           </div>
           <div className="flex-grow p-4 bg-gray-200 overflow-auto">
-            {/* log space */}
+            <LogSpace logs={logs} />
           </div>
         </div>
       </div>

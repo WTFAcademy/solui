@@ -28,11 +28,14 @@ const useEthers = ({ abi, contractAddress, providerUrl }: UseEthersProps) => {
       try {
         const result = await contract[functionName](...args);
         console.log(`Result:`, result);
+        return result; // 添加这一行以返回结果
       } catch (error) {
         console.error(`Error calling function '${functionName}':`, error);
+        throw error; // 添加这一行以抛出错误
       }
     } else {
       console.error("Contract or provider not set.");
+      throw new Error("Contract or provider not set."); // 添加这一行以抛出错误
     }
   };
 
