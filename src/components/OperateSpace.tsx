@@ -17,11 +17,12 @@ const OperateSpace: React.FC<OperateSpaceProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState("");
   const { callFunction } = useEthers({ abi, contractAddress, providerUrl });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOperateButtonClick = async () => {
     if (selectedAbi && selectedAbi.name) {
+      setIsLoading(true);
       const functionName = selectedAbi.name;
-
       // Split inputValue into an array of values, allowing empty input
       const inputValues =
         inputValue === ""
@@ -29,6 +30,7 @@ const OperateSpace: React.FC<OperateSpaceProps> = ({
           : inputValue.split(",").map((value) => value.trim());
 
       await callFunction(functionName, inputValues);
+      setIsLoading(false);
     }
   };
 
@@ -48,8 +50,9 @@ const OperateSpace: React.FC<OperateSpaceProps> = ({
           <button
             className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={handleOperateButtonClick}
+            disabled={isLoading}
           >
-            {selectedAbi.name}
+            {isLoading ? "Loading..." : selectedAbi.name}
           </button>
         </>
       )}
