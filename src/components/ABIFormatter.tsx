@@ -1,44 +1,47 @@
 import React from "react";
-import { AbiItem, AbiInput, AbiOutput } from "web3-utils";
+import { AbiItem, AbiInput } from "web3-utils";
 import Table from "./Table";
 
 interface ABIFormatterProps {
   abi: AbiItem[];
+  onButtonClick: (jsonString: string) => void;
 }
 
 const formatInputs = (inputs: AbiInput[]) => {
   return inputs.map((input) => `${input.type} ${input.name}`).join(", ");
 };
 
-const formatOutputs = (outputs: AbiOutput[]) => {
-  return outputs.map((output) => `${output.type} ${output.name}`).join(", ");
-};
-
-const ABIFormatter: React.FC<ABIFormatterProps> = ({ abi }) => {
+const ABIFormatter: React.FC<ABIFormatterProps> = ({ abi, onButtonClick }) => {
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
     },
-    {
-      title: "Type",
-      dataIndex: "type",
-    },
+
     {
       title: "Inputs",
       dataIndex: "inputs",
+      render: (inputs: string) => (
+        <div className="w-48 overflow-x-auto whitespace-nowrap">{inputs}</div>
+      ),
     },
     {
-      title: "Outputs",
-      dataIndex: "outputs",
+      title: "Execute",
+      dataIndex: "execute",
     },
   ];
 
   const data = abi.map((item) => ({
     name: item.name || "",
-    type: item.type,
     inputs: formatInputs(item.inputs || []),
-    outputs: formatOutputs(item.outputs || []),
+    execute: item.name ? (
+      <button
+        className="bg-blue-500 hover:bg-blue-700 w-48 text-white font-bold py-2 px-4 rounded"
+        onClick={() => onButtonClick(JSON.stringify(item))}
+      >
+        {item.name}
+      </button>
+    ) : null,
   }));
 
   return <Table columns={columns} data={data} />;

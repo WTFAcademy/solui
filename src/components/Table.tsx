@@ -3,6 +3,7 @@ import React from "react";
 interface TableColumn {
   title: string;
   dataIndex: string;
+  render?: (value: any, row: { [key: string]: any }) => React.ReactNode;
 }
 
 interface TableProps {
@@ -32,7 +33,9 @@ const Table: React.FC<TableProps> = ({ columns, data }) => {
               {columns.map((column, colIndex) => (
                 <td key={colIndex} className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">
-                    {row[column.dataIndex]}
+                    {column.render
+                      ? column.render(row[column.dataIndex], row)
+                      : row[column.dataIndex]}
                   </div>
                 </td>
               ))}

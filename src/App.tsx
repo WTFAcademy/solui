@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { AbiItem } from "web3-utils";
 import ABIFormatter from "./components/ABIFormatter";
 import Header from "./components/Header";
+import OperateSpace from "./components/OperateSpace";
 
 // mock data
 const abi: AbiItem[] = [
@@ -814,15 +815,29 @@ const abi: AbiItem[] = [
 ];
 
 const App: React.FC = () => {
+  const [selectedAbiJson, setSelectedAbiJson] = useState<string | null>(null);
+
+  console.log(selectedAbiJson, "selectedAbiJson");
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       <div className="flex h-screen mt-16">
         <div className="w-1/2 p-4 overflow-auto">
-          <ABIFormatter abi={abi} />
+          <ABIFormatter
+            abi={abi}
+            onButtonClick={(jsonString) => setSelectedAbiJson(jsonString)}
+          />
         </div>
         <div className="w-1/2 flex flex-col">
-          <div className="flex-grow p-4 bg-gray-100">{/* operate space */}</div>
+          <div className="flex-grow p-4 bg-gray-100">
+            {/* <OperateSpace
+              selectedAbiJson={selectedAbiJson}
+              abiList={abi}
+              contractAddress="0xYourContractAddress"
+              providerUrl="https://mainnet.infura.io/v3/YOUR-PROJECT-ID"
+            /> */}
+          </div>
           <div className="flex-grow p-4 bg-gray-200 overflow-auto">
             {/* log space */}
           </div>
