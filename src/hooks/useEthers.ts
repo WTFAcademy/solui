@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { AbiItem } from "web3-utils";
 import { JsonRpcProvider, Contract } from "ethers";
 
 interface UseEthersProps {
@@ -24,7 +23,7 @@ const useEthers = ({ abi, contractAddress, providerUrl }: UseEthersProps) => {
     }
   }, [abi, contractAddress, providerUrl]);
 
-  const callFunction = async (functionName: string, args: any[]) => {
+  const callFunction = async (functionName: string, args: any[] = []) => {
     if (contract && provider) {
       try {
         const result = await contract[functionName](...args);

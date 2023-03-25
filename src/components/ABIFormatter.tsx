@@ -4,7 +4,7 @@ import Table from "./Table";
 
 interface ABIFormatterProps {
   abi: AbiItem[];
-  onButtonClick: (jsonString: string) => void;
+  onButtonClick: (item: AbiItem) => void;
 }
 
 const formatInputs = (inputs: AbiInput[]) => {
@@ -37,7 +37,7 @@ const ABIFormatter: React.FC<ABIFormatterProps> = ({ abi, onButtonClick }) => {
     execute: item.name ? (
       <button
         className="bg-blue-500 hover:bg-blue-700 w-48 text-white font-bold py-2 px-4 rounded"
-        onClick={() => onButtonClick(JSON.stringify(item))}
+        onClick={() => onButtonClick(item)}
       >
         {item.name}
       </button>

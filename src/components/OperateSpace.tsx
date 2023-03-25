@@ -1,40 +1,40 @@
 import React, { useState } from "react";
 import { AbiItem } from "web3-utils";
-import useEthers from "./useEthers";
+import useEthers from "../hooks/useEthers";
 
 interface OperateSpaceProps {
-  selectedAbiJson: string | null;
-  abiList: AbiItem[];
+  selectedAbi: AbiItem | null;
+  abi: any;
   contractAddress: string;
   providerUrl: string;
 }
 
 const OperateSpace: React.FC<OperateSpaceProps> = ({
-  selectedAbiJson,
-  abiList,
+  selectedAbi,
+  abi,
   contractAddress,
   providerUrl,
 }) => {
   const [inputValue, setInputValue] = useState("");
+  const { callFunction } = useEthers({ abi, contractAddress, providerUrl });
 
-  // Replace the placeholders with actual values.
-  const { callFunction } = useEthers({
-    abi: selectedAbiJson,
-    contractAddress,
-    providerUrl,
-  });
+  const handleOperateButtonClick = async () => {
+    if (selectedAbi && selectedAbi.name) {
+      const functionName = selectedAbi.name;
 
-  //   const handleOperateButtonClick = async () => {
-  //     if (selectedAbi && selectedAbi.name) {
-  //       // Assuming that the input values are comma-separated.
-  //       const inputValues = inputValue.split(",").map((value) => value.trim());
-  //       await callFunction(selectedAbi.name, inputValues);
-  //     }
-  //   };
+      // Split inputValue into an array of values, allowing empty input
+      const inputValues =
+        inputValue === ""
+          ? []
+          : inputValue.split(",").map((value) => value.trim());
+
+      await callFunction(functionName, inputValues);
+    }
+  };
 
   return (
     <div className="flex justify-center items-center">
-      {/* {selectedAbi && selectedAbi.inputs && (
+      {selectedAbi && selectedAbi.inputs && (
         <>
           <input
             className="w-2/3 p-2 border border-gray-300 rounded"
@@ -52,7 +52,7 @@ const OperateSpace: React.FC<OperateSpaceProps> = ({
             {selectedAbi.name}
           </button>
         </>
-      )} */}
+      )}
     </div>
   );
 };
